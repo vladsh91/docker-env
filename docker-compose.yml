@@ -1,0 +1,27 @@
+version: '3.5'
+services:
+  apache:
+    build:
+      context: './build/${APACHE_BUILD_FOLDER:-apache}'
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - '${PROJECT_SRC:?please define PROJECT_SRC variable}:/var/www/html'
+  mysql:
+    build:
+      context: './build/${MYSQL_BUILD_FOLDER:-mysql}'
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - 'mysql:/var/lib/mysql'
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+      - 'MYSQL_DATABASE=${MYSQL_DATABASE}'
+      - 'MYSQL_USER=${MYSQL_USER}'
+      - 'MYSQL_PASSWORD=${MYSQL_PASSWORD}'
+volumes:
+  mysql:
+networks:
+  static:
+    driver: bridge
+    #driver_opts:
