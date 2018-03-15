@@ -5,6 +5,9 @@ services:
       context: './build/${APACHE_BUILD_FOLDER:-apache}'
       dockerfile: Dockerfile
     restart: always
+    networks:
+      static:
+        ipv4_address: '${IP_ADDR_APACHE:?please define IP_ADDR_APACHE variable}'
     volumes:
       - '${PROJECT_SRC:?please define PROJECT_SRC variable}:/var/www/html'
   mysql:
@@ -12,6 +15,9 @@ services:
       context: './build/${MYSQL_BUILD_FOLDER:-mysql}'
       dockerfile: Dockerfile
     restart: always
+    networks:
+      static:
+        ipv4_address: '${IP_ADDR_MYSQL:?please define IP_ADDR_MYSQL variable}'
     volumes:
       - 'mysql:/var/lib/mysql'
     environment:
@@ -24,4 +30,7 @@ volumes:
 networks:
   static:
     driver: bridge
-    #driver_opts:
+    ipam:
+      driver: default
+      config:
+        - subnet: '${IP_ADDR_SUBNET:?please define IP_ADDR_SUBNET}'
